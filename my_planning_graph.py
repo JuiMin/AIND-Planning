@@ -4,7 +4,7 @@ from aimacode.utils import expr, Expr
 from lp_utils import decode_state
 
 
-class PgNode():
+class PgNode(): 
     """Base class for planning graph nodes.
 
     includes instance sets common to both types of nodes used in a planning graph
