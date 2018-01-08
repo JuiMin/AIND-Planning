@@ -577,22 +577,27 @@ class PlanningGraph():
         # TODO implement
         # for each goal in the problem, determine the level cost, then add them together
 
-        # Loop through each goal and test the level cost
-        for goal in self.problem.goal:
-            # Initialize to start at state level 0
-            this_level = 0
-            # Marker to see if we found the cost yet
-            found = False
-            while this_level < len(self.s_levels) and found is False:
-                # Check all literals at this level to see if the goal is there
-                for literal in self.s_levels[this_level]:
-                    # If the goal is here and is also positive (assume all goals are positive?)
+        # copy the list of goals
+        goals = self.problem.goal[:]
+
+        # Loop through each level of the graph and check to see if we have found any goals
+        for level in range(0,len(self.s_levels)):
+            # For each literal in the level, test if it finds a goal
+            for literal in self.s_levels[level]:
+                # Check all the goals we have left
+                for goal in goals:
+                    # Do the goal comparison
                     if goal == literal.symbol and literal.is_pos:
-                        # Add the cost of this level to the sum and 
-                        level_sum += this_level
-                        # mark that we found the cost to stop loop
-                        found = True
-                # Increment to next level
-                this_level += 1
+                        # We have found a goal
+                        # Add the level we are at to the level sum
+                        level_sum += level
+                        # remove the found goal from our temp list
+                        goals.remove(goal)
+                        # If goals is empty, we can return
+                        if len(goals) == 0:
+                            return level_sum
+        # If we get here, goals still has something that is not reached,
+        # Which should mean the problem is unsolvable
+        # return the level sum anyway
         return level_sum
 
